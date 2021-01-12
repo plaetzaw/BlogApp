@@ -2,12 +2,16 @@ const Navbar = () => {
 
 return (
     <nav className="navbar">
-      <h1>The Dojo Blog</h1>
+      <h1>Packers Fan Club</h1>
       <div className="links">
-        <a href="/">Home</a>
+        <a href="/" style={{
+            color: 'Yellow',
+            backgroundColor: "Green",
+            borderRadius: '8px'
+        }}>Home</a>
         <a href="/create" style={{ 
-          color: 'white', 
-          backgroundColor: '#f1356d',
+          color: 'Yellow', 
+          backgroundColor: 'Blue',
           borderRadius: '8px' 
         }}>New Blog</a>
       </div>
