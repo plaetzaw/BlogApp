@@ -4,29 +4,45 @@ import BlogList from "./BlogList";
 const Home = () => {
 
 
-  const [blogs, setBlogs] = useState([
-    { title: 'Aaron Rodgers is a bad man', body: 'Who is your Daddy and what does he do?', author: 'Packers', id: 1 },
-    { title: 'Davantae Adams is a baller', body: 'I`ll be back baybee!"', author: 'NFCN', id: 2 },
-    { title: 'Aaron Jones is a tank', body: 'I like Turtles, I like them a lot', author: 'Packers', id: 3 }
-  ])
+  const [blogs, setBlogs] = useState(null)
+  const [isPending, setIsPending] = useState(true)
+  const [error, setError] = useState(null)
+  //could just be done as useState([])
 
-  const [name, setName] = useState("Packers")
 
-  const handleDelete = (id) => {
-    const newBlogs = blogs.filter(blog => blog.id !== id);
-    setBlogs(newBlogs);
-  }
+//   const handleDelete = (id) => {
+//     const newBlogs = blogs.filter(blog => blog.id !== id);
+//     setBlogs(newBlogs);
+//   }
 
   useEffect(()=>{
-    console.log('use effect ran')
-  }, [name]);
+    setTimeout(() => {
+    fetch('http://localhost:8000/blogs')
+    .then(res => {
+        if(!res.ok){
+             throw Error('Could not fetch data for resouce, what are u doing?')
+        }
+        return res.json()
+    })
+    .then((data)=>{
+        setBlogs(data);
+        setIsPending(false);
+        setError(null)
+    })
+    .catch(err => {
+    setIsPending(false)
+    setError(err.message);
+    })
+}, 1000)
+  }, []);
 
   return (
     <div className="home">
-      <BlogList blogs={blogs} title="All Blogs"  handleDelete={handleDelete}/>
-      <BlogList blogs={blogs.filter(blog => blog.author === 'Packers')} title="Packers's Blogs" handleDelete={handleDelete} />
-      <button onClick={()=> setName("Vikings")}>Change Name</button>
-      <p>{name}</p>
+        {error && <div><h1>{error}</h1></div>}
+        { isPending && <div><h2>Data is Loading...</h2></div>}
+      {blogs && <BlogList blogs={blogs} title="All Blogs"/>}
+      {/* <BlogList blogs={blogs.filter(blog => blog.author === 'Packers')} title="Packers's Blogs" /> */}
+  
     </div>
   );
 }
